@@ -1,0 +1,116 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ */
+package javaapplication7;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Calculadora extends JFrame implements ActionListener {
+
+    JTextField pantalla;
+    String operador = "";
+    double resultado = 0;
+
+    public Calculadora() {
+
+        setTitle("Calculadora");
+        setSize(360, 450);
+        setLayout(null);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        pantalla = new JTextField();
+        pantalla.setBounds(20,20,300,50);
+        pantalla.setFont(new Font("Arial",Font.BOLD,22));
+        pantalla.setHorizontalAlignment(JTextField.RIGHT);
+        add(pantalla);
+
+        String botones[] = {
+                "7","8","9","/",
+                "4","5","6","*",
+                "1","2","3","-",
+                "0","C","=","+"
+        };
+
+        int x = 20;
+        int y = 90;
+
+        for(String texto : botones){
+
+            JButton boton = new JButton(texto);
+            boton.setBounds(x,y,80,80);
+            boton.setFont(new Font("Arial",Font.BOLD,18));
+            boton.addActionListener(this);
+            add(boton);
+
+            x += 80;
+
+            if(x > 260){
+                x = 20;
+                y += 80;
+            }
+        }
+
+        setVisible(true);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+
+        String comando = e.getActionCommand();
+
+        // Números
+        if(comando.matches("[0-9]")){
+            pantalla.setText(pantalla.getText() + comando);
+        }
+
+        // Operadores
+        else if(comando.equals("+") || comando.equals("-") || comando.equals("*") || comando.equals("/")){
+            pantalla.setText(pantalla.getText() + comando);
+            operador = comando;
+        }
+
+        // Igual
+        else if(comando.equals("=")){
+
+            try{
+
+                String texto = pantalla.getText();
+                String partes[] = texto.split("\\" + operador);
+
+                double num1 = Double.parseDouble(partes[0]);
+                double num2 = Double.parseDouble(partes[1]);
+
+                switch(operador){
+
+                    case "+" -> resultado = num1 + num2;
+                    case "-" -> resultado = num1 - num2;
+                    case "*" -> resultado = num1 * num2;
+                    case "/" -> resultado = num1 / num2;
+
+                }
+
+                pantalla.setText(String.valueOf(resultado));
+
+            }catch(NumberFormatException ex){
+
+                pantalla.setText("Error");
+
+            }
+        }
+
+        // Limpiar
+        else if(comando.equals("C")){
+            pantalla.setText("");
+            operador = "";
+            resultado = 0;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Calculadora Calculadora = new Calculadora(); /*calculadora*/
+
+    }
+}
